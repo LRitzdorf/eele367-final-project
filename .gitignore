@@ -16,5 +16,6 @@ output_files/
 *.qsf
 *.qws
 
-# Image files, also stored in this folder for assignment submission
+# Media files, also stored in this folder for assignment submission
 *.png
+*.mp4
