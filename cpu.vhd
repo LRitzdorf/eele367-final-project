@@ -9,7 +9,7 @@ entity cpu is
         address     : out std_logic_vector(width-1 downto 0);
         write       : out std_logic;
         to_memory   : out std_logic_vector(width-1 downto 0);
-        from_memory : out std_logic_vector(width-1 downto 0)
+        from_memory : in  std_logic_vector(width-1 downto 0)
     );
 end entity;
 
@@ -22,7 +22,7 @@ architecture cpu_arch of cpu is
             reset : in std_logic;
             write : out std_logic;
             PC_Load    : out std_logic;
-            PC_Inc     : in  std_logic;
+            PC_Inc     : out std_logic;
             PC         : in  std_logic_vector(width-1 downto 0);
             IR_Load    : out std_logic;
             IR         : in  std_logic_vector(width-1 downto 0);
@@ -101,7 +101,5 @@ begin
             CCR_Load => CCR_Load, CCR => CCR,
             Bus1_Sel => Bus1_Sel, Bus2_Sel => Bus2_Sel
         );
-
-    -- TODO
 
 end architecture;

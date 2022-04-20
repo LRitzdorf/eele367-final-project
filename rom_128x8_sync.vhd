@@ -16,12 +16,30 @@ architecture rom_128x8_sync_arch of rom_128x8_sync is
 
     -- NOTE: Program goes in here!
     constant ROM : ROM_Type := (
-        0  => x"00",
-        others => x"00"
+        16#00# => x"87",
+        16#01# => x"F0",
+
+        16#02# => x"96",
+        16#03# => x"E0",
+        16#04# => x"96",
+        16#05# => x"E1",
+        16#06# => x"96",
+        16#07# => x"E2",
+        16#08# => x"96",
+        16#09# => x"E3",
+
+        16#0A# => x"20",
+        16#0B# => x"00",
+        others => x"FF"
     );
 
 begin
 
-    -- TODO
+    ROM_PROC : process(clock)
+    begin
+        if rising_edge(clock) then
+            data_out <= ROM(to_integer(unsigned(address)));
+        end if;
+    end process;
 
 end architecture;

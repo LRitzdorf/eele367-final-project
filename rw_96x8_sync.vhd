@@ -19,6 +19,14 @@ architecture rw_96x8_sync_arch of rw_96x8_sync is
 
 begin
 
-    -- TODO
+    RW_PROC : process(clock)
+    begin
+        if rising_edge(clock) then
+            if write = '1' then
+                RW(to_integer(unsigned(address))) <= data_in;
+            end if;
+            data_out <= RW(to_integer(unsigned(address)));
+        end if;
+    end process;
 
 end architecture;

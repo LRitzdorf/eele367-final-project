@@ -19,6 +19,12 @@ architecture alu_arch of alu is
 
 begin
 
-    -- TODO
+    ALU_PROC : process(In1, In2, Sel)
+    begin
+        -- TODO: Implement everything
+        -- FIXME
+        Result <= std_logic_vector(to_unsigned(0, Result'length));
+        NZVC   <= std_logic_vector(to_unsigned(0, NZVC'length));
+    end process;
 
 end architecture;

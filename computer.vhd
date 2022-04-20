@@ -52,7 +52,7 @@ architecture computer_arch of computer is
             address     : out std_logic_vector(width-1 downto 0);
             write       : out std_logic;
             to_memory   : out std_logic_vector(width-1 downto 0);
-            from_memory : out std_logic_vector(width-1 downto 0)
+            from_memory : in  std_logic_vector(width-1 downto 0)
         );
     end component;
 
@@ -61,9 +61,9 @@ architecture computer_arch of computer is
         port (
             clock : in std_logic;
             reset : in std_logic;
-            address  : out std_logic_vector(7 downto 0);
-            write    : out std_logic;
-            data_in  : out std_logic_vector(7 downto 0);
+            address  : in  std_logic_vector(7 downto 0);
+            write    : in  std_logic;
+            data_in  : in  std_logic_vector(7 downto 0);
             data_out : out std_logic_vector(7 downto 0);
             port_in_00  : in  std_logic_vector(width-1 downto 0);
             port_in_01  : in  std_logic_vector(width-1 downto 0);
@@ -127,7 +127,5 @@ begin
             port_out_08 => port_out_08, port_out_09 => port_out_09, port_out_10 => port_out_10, port_out_11 => port_out_11,
             port_out_12 => port_out_12, port_out_13 => port_out_13, port_out_14 => port_out_14, port_out_15 => port_out_15
         );
-
-    -- TODO
 
 end architecture;
