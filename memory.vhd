@@ -12,9 +12,9 @@ entity memory is
     port (
         clock : in std_logic;
         reset : in std_logic;
-        address  : out std_logic_vector(7 downto 0);
-        write    : out std_logic;
-        data_in  : out std_logic_vector(width-1 downto 0);
+        address  : in  std_logic_vector(7 downto 0);
+        write    : in  std_logic;
+        data_in  : in  std_logic_vector(width-1 downto 0);
         data_out : out std_logic_vector(7 downto 0);
         port_in_00  : in  std_logic_vector(width-1 downto 0);
         port_in_01  : in  std_logic_vector(width-1 downto 0);
@@ -71,21 +71,38 @@ architecture memory_arch of memory is
         );
     end component;
 
+    -- NOTE: Memory map ordering is: ROM, RW, output ports, input ports
+    constant RW_START       : unsigned := x"80";
+    constant PORT_OUT_START : unsigned := x"E0";
+    constant PORT_IN_START  : unsigned := x"F0";
+
     signal offset_address                  : std_logic_vector(address'length-1 downto 0);
     signal rom_data, rw_data, port_in_data : std_logic_vector(7 downto 0);
     signal write_enable                    : std_logic_vector(1 downto 0);
 
 begin
 
-    -- TODO: Memory map control process
+    -- Address translation and memory map control
+    offset_address <= address                                              when unsigned(address) < RW_START else
+                      std_logic_vector(unsigned(address) - RW_START)       when unsigned(address) < PORT_OUT_START else
+                      std_logic_vector(unsigned(address) - PORT_OUT_START) when unsigned(address) < PORT_IN_START else
+                      std_logic_vector(unsigned(address) - PORT_IN_START);
+    data_out       <= rom_data                                          when unsigned(address) < RW_START else
+                      rw_data                                           when unsigned(address) < PORT_OUT_START else
+                      std_logic_vector(to_unsigned(0, data_out'length)) when unsigned(address) < PORT_IN_START else
+                      port_in_data;
+    write_enable   <= "00" when unsigned(address) < RW_START else
+                      "01" when unsigned(address) < PORT_OUT_START else
+                      "10" when unsigned(address) < PORT_IN_START else
+                      "00";
 
+    -- ROM and RW instantiation
     uROM : rom_128x8_sync
         port map (
             clock => clock,
             address => offset_address(6 downto 0),
             data_out => rom_data
         );
-
     uRW : rw_96x8_sync
         port map (
             clock => clock,
@@ -95,9 +112,58 @@ begin
             data_out => rw_data
         );
 
-    -- TODO: Two muxers for IO ports
-    --   Output port writing depends on write_enable(1)
-    --   Input ports always read from given address
-    --     Must assign to "port_in_data"
+    -- Output ports
+    OUTPUT_PORT_PROC : process(clock)
+    begin
+        if rising_edge(clock) then
+            if write_enable(1) = '1' and write = '1' then
+                case offset_address is
+                    when x"00" => port_out_00 <= data_in;
+                    when x"01" => port_out_01 <= data_in;
+                    when x"02" => port_out_02 <= data_in;
+                    when x"03" => port_out_03 <= data_in;
+                    when x"04" => port_out_04 <= data_in;
+                    when x"05" => port_out_05 <= data_in;
+                    when x"06" => port_out_06 <= data_in;
+                    when x"07" => port_out_07 <= data_in;
+                    when x"08" => port_out_08 <= data_in;
+                    when x"09" => port_out_09 <= data_in;
+                    when x"0A" => port_out_10 <= data_in;
+                    when x"0B" => port_out_11 <= data_in;
+                    when x"0C" => port_out_12 <= data_in;
+                    when x"0D" => port_out_13 <= data_in;
+                    when x"0E" => port_out_14 <= data_in;
+                    when x"0F" => port_out_15 <= data_in;
+                    when others => null;
+                end case;
+            end if;
+        end if;
+    end process;
+
+    -- Input ports
+    INPUT_PORT_PROC : process(clock)
+    begin
+        if rising_edge(clock) then
+            case offset_address is
+                when x"00" => port_in_data <= port_in_00;
+                when x"01" => port_in_data <= port_in_01;
+                when x"02" => port_in_data <= port_in_02;
+                when x"03" => port_in_data <= port_in_03;
+                when x"04" => port_in_data <= port_in_04;
+                when x"05" => port_in_data <= port_in_05;
+                when x"06" => port_in_data <= port_in_06;
+                when x"07" => port_in_data <= port_in_07;
+                when x"08" => port_in_data <= port_in_08;
+                when x"09" => port_in_data <= port_in_09;
+                when x"0A" => port_in_data <= port_in_10;
+                when x"0B" => port_in_data <= port_in_11;
+                when x"0C" => port_in_data <= port_in_12;
+                when x"0D" => port_in_data <= port_in_13;
+                when x"0E" => port_in_data <= port_in_14;
+                when x"0F" => port_in_data <= port_in_15;
+                when others => null;
+            end case;
+        end if;
+    end process;
 
 end architecture;

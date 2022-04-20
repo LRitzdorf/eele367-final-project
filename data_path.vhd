@@ -48,7 +48,75 @@ architecture data_path_arch of data_path is
 
 begin
 
-    -- TODO
+    -- CPU Registers (lots of them)
+
+    PC_REG_PROC : process(clock, reset)
+    begin
+        if reset = '0' then
+            PC <= PROGRAM_START;
+        elsif rising_edge(clock) then
+            if PC_Load = '1' then
+                PC <= Bus2;
+            elsif PC_Inc = '1' then
+                PC <= std_logic_vector(unsigned(PC) + to_unsigned(1, PC'length));
+            end if;
+        end if;
+    end process;
+
+    IR_REG_PROC : process(clock, reset)
+    begin
+        if reset = '0' then
+            IR <= std_logic_vector(to_unsigned(0, IR'length));
+        elsif rising_edge(clock) then
+            if IR_Load = '1' then
+                IR <= Bus2;
+            end if;
+        end if;
+    end process;
+
+    MAR_REG_PROC : process(clock, reset)
+    begin
+        if reset = '0' then
+            MAR <= std_logic_vector(to_unsigned(0, MAR'length));
+        elsif rising_edge(clock) then
+            if MAR_Load = '1' then
+                MAR <= Bus2;
+            end if;
+        end if;
+    end process;
+
+    A_REG_PROC : process(clock, reset)
+    begin
+        if reset = '0' then
+            A <= std_logic_vector(to_unsigned(0, A'length));
+        elsif rising_edge(clock) then
+            if A_Load = '1' then
+                A <= Bus2;
+            end if;
+        end if;
+    end process;
+
+    B_REG_PROC : process(clock, reset)
+    begin
+        if reset = '0' then
+            B <= std_logic_vector(to_unsigned(0, B'length));
+        elsif rising_edge(clock) then
+            if B_Load = '1' then
+                B <= Bus2;
+            end if;
+        end if;
+    end process;
+
+    CCR_REG_PROC : process(clock, reset)
+    begin
+        if reset = '0' then
+            CCR <= std_logic_vector(to_unsigned(0, CCR'length));
+        elsif rising_edge(clock) then
+            if CCR_Load = '1' then
+                CCR <= ALU_NZVC;
+            end if;
+        end if;
+    end process;
 
     -- Arithmetic/Logic Unit
     uALU : alu
@@ -58,6 +126,18 @@ begin
             Sel => ALU_Sel,
             Result => ALU_Result, NZVC => ALU_NZVC
         );
+
+    -- Multiplexers
+    with Bus1_Sel select
+        Bus1 <= PC when "00",
+                A  when "01",
+                B  when "10",
+                std_logic_vector(to_unsigned(0, Bus1'length)) when others;
+    with Bus2_Sel select
+        Bus2 <= ALU_Result  when "00",
+                Bus1        when "01",
+                from_memory when "10",
+                std_logic_vector(to_unsigned(0, Bus1'length)) when others;
 
     -- Static wiring
     address   <= MAR;
