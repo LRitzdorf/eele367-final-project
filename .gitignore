@@ -1,0 +1,20 @@
+# Backup files
+*.bak
+
+# ModelSim/Questa artifacts
+work/
+*.mti
+*.mpf
+*.wlf
+transcript
+
+# Quartus artifacts
+db/
+incremental_db/
+output_files/
+*.qpf
+*.qsf
+*.qws
+
+# Image files, also stored in this folder for assignment submission
+*.png
