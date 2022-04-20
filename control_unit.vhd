@@ -31,7 +31,10 @@ architecture control_unit_arch of control_unit is
         DECODE_3,
         LDA_IMM_4, LDA_IMM_5, LDA_IMM_6,
         LDA_DIR_4, LDA_DIR_5, LDA_DIR_6, LDA_DIR_7, LDA_DIR_8,
+        LDB_IMM_4, LDB_IMM_5, LDB_IMM_6,
+        LDB_DIR_4, LDB_DIR_5, LDB_DIR_6, LDB_DIR_7, LDB_DIR_8,
         STA_DIR_4, STA_DIR_5, STA_DIR_6, STA_DIR_7,
+        STB_DIR_4, STB_DIR_5, STB_DIR_6, STB_DIR_7,
         BRA_4, BRA_5, BRA_6,
         -- TODO
         HALT_99
@@ -53,9 +56,13 @@ begin
 
     NEXT_STATE_PROC : process(CurrentState)
         -- Opcode values
+        -- TODO: Use a package for this?
         constant LDA_IMM : std_logic_vector := x"86";
         constant LDA_DIR : std_logic_vector := x"87";
+        constant LDB_IMM : std_logic_vector := x"88";
+        constant LDB_DIR : std_logic_vector := x"89";
         constant STA_DIR : std_logic_vector := x"96";
+        constant STB_DIR : std_logic_vector := x"97";
         constant BRA     : std_logic_vector := x"20";
         -- TODO: Add opcode values above this line
         constant NOP     : std_logic_vector := x"00";
@@ -70,7 +77,10 @@ begin
                 case IR is
                     when LDA_IMM => NextState <= LDA_IMM_4;
                     when LDA_DIR => NextState <= LDA_DIR_4;
+                    when LDB_IMM => NextState <= LDB_IMM_4;
+                    when LDB_DIR => NextState <= LDB_DIR_4;
                     when STA_DIR => NextState <= STA_DIR_4;
+                    when STB_DIR => NextState <= STB_DIR_4;
                     when BRA     => NextState <= BRA_4;
                     -- TODO: Further instruction branching goes here
                     -- A no-op restarts the fetch cycle
@@ -88,10 +98,22 @@ begin
             when LDA_DIR_5 => NextState <= LDA_DIR_6;
             when LDA_DIR_6 => NextState <= LDA_DIR_7;
             when LDA_DIR_7 => NextState <= LDA_DIR_8;
+            -- Load B Immediate
+            when LDB_IMM_4 => NextState <= LDB_IMM_5;
+            when LDB_IMM_5 => NextState <= LDB_IMM_6;
+            -- Load B Direct
+            when LDB_DIR_4 => NextState <= LDB_DIR_5;
+            when LDB_DIR_5 => NextState <= LDB_DIR_6;
+            when LDB_DIR_6 => NextState <= LDB_DIR_7;
+            when LDB_DIR_7 => NextState <= LDB_DIR_8;
             -- Store A Direct
             when STA_DIR_4 => NextState <= STA_DIR_5;
             when STA_DIR_5 => NextState <= STA_DIR_6;
             when STA_DIR_6 => NextState <= STA_DIR_7;
+            -- Store B Direct
+            when STB_DIR_4 => NextState <= STB_DIR_5;
+            when STB_DIR_5 => NextState <= STB_DIR_6;
+            when STB_DIR_6 => NextState <= STB_DIR_7;
             -- Branch Always
             when BRA_4 => NextState <= BRA_5;
             when BRA_5 => NextState <= BRA_6;
@@ -244,6 +266,100 @@ begin
                 Bus2_Sel <= "10";
                 write    <= '0';
 
+            when LDB_IMM_4 =>
+            -- Store PC to MAR
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '1';
+                A_Load   <= '0';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "00";
+                Bus2_Sel <= "01";
+                write    <= '0';
+            when LDB_IMM_5 =>
+            -- Increment PC while waiting for memory
+                PC_Load  <= '0';
+                PC_Inc   <= '1';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '0';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "11";
+                Bus2_Sel <= "11";
+                write    <= '0';
+            when LDB_IMM_6 =>
+            -- Load B from memory
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '0';
+                B_Load   <= '1';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "11";
+                Bus2_Sel <= "10";
+                write    <= '0';
+
+            when LDB_DIR_4 =>
+            -- Store PC to MAR
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '1';
+                A_Load   <= '0';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "00";
+                Bus2_Sel <= "01";
+                write    <= '0';
+            when LDB_DIR_5 =>
+            -- Increment PC while waiting for memory
+                PC_Load  <= '0';
+                PC_Inc   <= '1';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '0';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "11";
+                Bus2_Sel <= "11";
+                write    <= '0';
+            when LDB_DIR_6 =>
+            -- Load MAR from memory
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '1';
+                A_Load   <= '0';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "11";
+                Bus2_Sel <= "10";
+                write    <= '0';
+            --   LDB_DIR_7 -> others  Wait for memory
+            when LDB_DIR_8 =>
+            -- Load B from memory
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '0';
+                B_Load   <= '1';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "11";
+                Bus2_Sel <= "10";
+                write    <= '0';
+
             when STA_DIR_4 =>
             -- Store PC to MAR
                 PC_Load  <= '0';
@@ -294,6 +410,59 @@ begin
                 ALU_Sel  <= "000";
                 CCR_Load <= '0';
                 Bus1_Sel <= "01";
+                Bus2_Sel <= "11";
+                write    <= '1';
+
+            when STB_DIR_4 =>
+            -- Store PC to MAR
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '1';
+                A_Load   <= '0';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "00";
+                Bus2_Sel <= "01";
+                write    <= '0';
+            when STB_DIR_5 =>
+            -- Increment PC while waiting for memory
+                PC_Load  <= '0';
+                PC_Inc   <= '1';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '0';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "11";
+                Bus2_Sel <= "11";
+                write    <= '0';
+            when STB_DIR_6 =>
+            -- Load MAR from memory
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '1';
+                A_Load   <= '0';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "11";
+                Bus2_Sel <= "10";
+                write    <= '0';
+            when STB_DIR_7 =>
+            -- Write B to memory
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '0';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "10";
                 Bus2_Sel <= "11";
                 write    <= '1';
 

@@ -12,9 +12,14 @@ end entity;
 
 architecture rom_128x8_sync_arch of rom_128x8_sync is
 
+    -- Opcode values
+    -- TODO: Use a package for this?
     constant LDA_IMM : std_logic_vector := x"86";
     constant LDA_DIR : std_logic_vector := x"87";
+    constant LDB_IMM : std_logic_vector := x"88";
+    constant LDB_DIR : std_logic_vector := x"89";
     constant STA_DIR : std_logic_vector := x"96";
+    constant STB_DIR : std_logic_vector := x"97";
     constant BRA     : std_logic_vector := x"20";
     -- TODO: Add opcode values above this line
     constant NOP     : std_logic_vector := x"00";
