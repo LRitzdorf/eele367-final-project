@@ -35,6 +35,8 @@ architecture control_unit_arch of control_unit is
         LDB_DIR_4, LDB_DIR_5, LDB_DIR_6, LDB_DIR_7, LDB_DIR_8,
         STA_DIR_4, STA_DIR_5, STA_DIR_6, STA_DIR_7,
         STB_DIR_4, STB_DIR_5, STB_DIR_6, STB_DIR_7,
+        ADD_AB_4, SUB_AB_4, AND_AB_4, OR_AB_4,
+        INCA_4, INCB_4, DECA_4, DECB_4,
         BRA_4, BRA_5, BRA_6,
         -- TODO
         HALT_99
@@ -89,6 +91,14 @@ begin
                     when LDB_DIR => NextState <= LDB_DIR_4;
                     when STA_DIR => NextState <= STA_DIR_4;
                     when STB_DIR => NextState <= STB_DIR_4;
+                    when ADD_AB  => NextState <= ADD_AB_4;
+                    when SUB_AB  => NextState <= SUB_AB_4;
+                    when AND_AB  => NextState <= AND_AB_4;
+                    when OR_AB   => NextState <= OR_AB_4;
+                    when INCA    => NextState <= INCA_4;
+                    when INCB    => NextState <= INCB_4;
+                    when DECA    => NextState <= DECA_4;
+                    when DECB    => NextState <= DECB_4;
                     when BRA     => NextState <= BRA_4;
                     -- TODO: Further instruction branching goes here
                     -- A no-op restarts the fetch cycle
@@ -122,6 +132,9 @@ begin
             when STB_DIR_4 => NextState <= STB_DIR_5;
             when STB_DIR_5 => NextState <= STB_DIR_6;
             when STB_DIR_6 => NextState <= STB_DIR_7;
+
+            -- ALU instructions last only one state
+
             -- Branch Always
             when BRA_4 => NextState <= BRA_5;
             when BRA_5 => NextState <= BRA_6;
@@ -473,6 +486,111 @@ begin
                 Bus1_Sel <= "10";
                 Bus2_Sel <= "11";
                 write    <= '1';
+
+            when ADD_AB_4 =>
+            -- Add B to A
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '1';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '1';
+                Bus1_Sel <= "01";
+                Bus2_Sel <= "00";
+                write    <= '0';
+            when SUB_AB_4 =>
+            -- Subtract B from A
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '1';
+                B_Load   <= '0';
+                ALU_Sel  <= "001";
+                CCR_Load <= '1';
+                Bus1_Sel <= "01";
+                Bus2_Sel <= "00";
+                write    <= '0';
+            when AND_AB_4 =>
+            -- Logical AND A with B
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '1';
+                B_Load   <= '0';
+                ALU_Sel  <= "010";
+                CCR_Load <= '1';
+                Bus1_Sel <= "01";
+                Bus2_Sel <= "00";
+                write    <= '0';
+            when OR_AB_4 =>
+            -- Logical OR A with B
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '1';
+                B_Load   <= '0';
+                ALU_Sel  <= "011";
+                CCR_Load <= '1';
+                Bus1_Sel <= "01";
+                Bus2_Sel <= "00";
+                write    <= '0';
+            when INCA_4 =>
+            -- Increment A by one
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '1';
+                B_Load   <= '0';
+                ALU_Sel  <= "100";
+                CCR_Load <= '1';
+                Bus1_Sel <= "01";
+                Bus2_Sel <= "00";
+                write    <= '0';
+            when INCB_4 =>
+            -- Increment B by one
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '0';
+                B_Load   <= '1';
+                ALU_Sel  <= "100";
+                CCR_Load <= '1';
+                Bus1_Sel <= "10";
+                Bus2_Sel <= "00";
+                write    <= '0';
+            when DECA_4 =>
+            -- Decrement A by one
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '1';
+                B_Load   <= '0';
+                ALU_Sel  <= "101";
+                CCR_Load <= '1';
+                Bus1_Sel <= "01";
+                Bus2_Sel <= "00";
+                write    <= '0';
+            when DECB_4 =>
+            -- Decrement B by one
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '0';
+                B_Load   <= '1';
+                ALU_Sel  <= "101";
+                CCR_Load <= '1';
+                Bus1_Sel <= "10";
+                Bus2_Sel <= "00";
+                write    <= '0';
 
             when BRA_4 =>
             -- Store PC to MAR
