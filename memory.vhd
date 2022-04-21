@@ -113,9 +113,27 @@ begin
         );
 
     -- Output ports
-    OUTPUT_PORT_PROC : process(clock)
+    OUTPUT_PORT_PROC : process(clock, reset)
     begin
-        if rising_edge(clock) then
+        if reset = '0' then
+            port_out_00 <= std_logic_vector(to_unsigned(0, port_out_00'length));
+            port_out_01 <= std_logic_vector(to_unsigned(0, port_out_01'length));
+            port_out_02 <= std_logic_vector(to_unsigned(0, port_out_02'length));
+            port_out_03 <= std_logic_vector(to_unsigned(0, port_out_03'length));
+            port_out_04 <= std_logic_vector(to_unsigned(0, port_out_04'length));
+            port_out_05 <= std_logic_vector(to_unsigned(0, port_out_05'length));
+            port_out_06 <= std_logic_vector(to_unsigned(0, port_out_06'length));
+            port_out_07 <= std_logic_vector(to_unsigned(0, port_out_07'length));
+            port_out_08 <= std_logic_vector(to_unsigned(0, port_out_08'length));
+            port_out_09 <= std_logic_vector(to_unsigned(0, port_out_09'length));
+            port_out_10 <= std_logic_vector(to_unsigned(0, port_out_10'length));
+            port_out_11 <= std_logic_vector(to_unsigned(0, port_out_11'length));
+            port_out_12 <= std_logic_vector(to_unsigned(0, port_out_12'length));
+            port_out_13 <= std_logic_vector(to_unsigned(0, port_out_13'length));
+            port_out_14 <= std_logic_vector(to_unsigned(0, port_out_14'length));
+            port_out_15 <= std_logic_vector(to_unsigned(0, port_out_15'length));
+
+        elsif rising_edge(clock) then
             if write_enable(1) = '1' and write = '1' then
                 case offset_address is
                     when x"00" => port_out_00 <= data_in;
