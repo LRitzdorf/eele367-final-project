@@ -37,20 +37,24 @@ architecture rom_128x8_sync_arch of rom_128x8_sync is
 
     -- NOTE: Program goes in here!
     constant ROM : ROM_Type := (
-        16#00# => LDA_DIR,
-        16#01# => x"F0",
+        16#00# => LDB_IMM,
+        16#01# => x"03",
 
-        16#02# => STA_DIR,
-        16#03# => x"E0",
-        16#04# => STA_DIR,
-        16#05# => x"E1",
-        16#06# => STA_DIR,
-        16#07# => x"E2",
-        16#08# => STA_DIR,
-        16#09# => x"E3",
+        16#02# => LDA_DIR,
+        16#03# => x"F0",
+        16#04# => ADD_AB,
 
-        16#0A# => BRA,
-        16#0B# => x"00",
+        16#05# => STA_DIR,
+        16#06# => x"E0",
+        16#07# => STA_DIR,
+        16#08# => x"E1",
+        16#09# => STA_DIR,
+        16#0A# => x"E2",
+        16#0B# => STA_DIR,
+        16#0C# => x"E3",
+
+        16#0D# => BRA,
+        16#0E# => x"02",
         others => HALT
     );
 
