@@ -63,11 +63,11 @@ The core `computer` entity is composed of:
       - `rw_96x8_sync`: synchronous RW (data) memory, containing 96 8-bit
         addresses (768 bits of total space)
 
-## Opcodes/Instructions
+## Opcodes/Mnemonics
 
-At present, the computer system implements the following instructions:
+At present, the computer system implements the following mnemonics:
 
-Mnemonic  | Opcode | Argument(s)     | Function
+Mnemonic  | Opcode | Operand(s)      | Function
 ----------|--------|-----------------|---------
 `LDA_IMM` | `0x86` | Value           | Load register A using immediate addressing
 `LDA_DIR` | `0x87` | Data address    | Load register A using direct addressing
