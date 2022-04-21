@@ -122,7 +122,7 @@ begin
     uALU : alu
         generic map (width => width)
         port map (
-            In1 => B, In2 => Bus1,
+            In1 => Bus1, In2 => B,
             Sel => ALU_Sel,
             Result => ALU_Result, NZVC => ALU_NZVC
         );

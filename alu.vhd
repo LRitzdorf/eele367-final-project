@@ -31,9 +31,9 @@ begin
             -- Logic OR
             '0' & (In1 or In2)                                                   when "011",
             -- Increment
-            std_logic_vector(unsigned('0' & In2) + to_unsigned(1, In2'length+1)) when "100",
+            std_logic_vector(unsigned('0' & In1) + to_unsigned(1, In1'length+1)) when "100",
             -- Decrement
-            std_logic_vector(unsigned('0' & In2) - to_unsigned(1, In2'length+1)) when "101",
+            std_logic_vector(unsigned('0' & In1) - to_unsigned(1, In1'length+1)) when "101",
             -- Other (invalid) operation: return zero
             std_logic_vector(to_unsigned(0, intermediate'length))                when others;
 
