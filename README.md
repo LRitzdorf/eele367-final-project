@@ -71,7 +71,18 @@ Mnemonic  | Opcode | Argument(s)     | Function
 ----------|--------|-----------------|---------
 `LDA_IMM` | `0x86` | Value           | Load register A using immediate addressing
 `LDA_DIR` | `0x87` | Data address    | Load register A using direct addressing
+`LDB_IMM` | `0x88` | Value           | Load register B using immediate addressing
+`LDB_DIR` | `0x89` | Data address    | Load register B using direct addressing
 `STA_DIR` | `0x96` | Data address    | Store from register A using direct addressing
+`STB_DIR` | `0x97` | Data address    | Store from register B using direct addressing
+`ADD_AB`  | `0x42` |                 | Add the unsigned value in register B to register A
+`SUB_AB`  | `0x43` |                 | Subtract the unsigned value in register B from register A
+`AND_AB`  | `0x44` |                 | Logical AND register A with register B
+`OR_AB`   | `0x45` |                 | Logical OR register A with register B
+`INCA`    | `0x46` |                 | Increment the value in register A by one
+`INCB`    | `0x47` |                 | Increment the value in register B by one
+`DECA`    | `0x48` |                 | Decrement the value in register A by one
+`DECB`    | `0x49` |                 | Decrement the value in register B by one
 `BRA`     | `0x20` | Program address | Branch always
 `NOP`     | `0x00` |                 | No-op (do nothing and continue executing)
 `HALT`    | `0xFF` |                 | End program execution

@@ -19,7 +19,6 @@ architecture alu_arch of alu is
 
 begin
 
-    -- TODO: Add usage notes to README
     with Sel select
         intermediate <=
             -- Addition
