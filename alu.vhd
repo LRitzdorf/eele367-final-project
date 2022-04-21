@@ -39,7 +39,7 @@ begin
     -- Result generation from intermediate value
     Result  <= intermediate(intermediate'high-1 downto 0);
     NZVC(3) <= Result(Result'high);
-    NZVC(2) <= '1' when to_integer(unsigned(Result)) = 0 else '0';
+    NZVC(2) <= '1' when Result = std_logic_vector(to_unsigned(0, Result'length)) else '0';
     NZVC(1) <= '1' when In1(In1'high) = In2(In2'high) and In1(In1'high) /= Result(Result'high) else '0';
     NZVC(0) <= intermediate(intermediate'high);
 
