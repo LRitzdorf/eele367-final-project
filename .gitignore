@@ -20,5 +20,6 @@ output_files/
 *.png
 *.mp4
 
-# Visio drawings
+# Drawings
 *.vsd
+*.odg
