@@ -38,7 +38,14 @@ architecture control_unit_arch of control_unit is
         ADD_AB_4, SUB_AB_4, AND_AB_4, OR_AB_4,
         INCA_4, INCB_4, DECA_4, DECB_4,
         BRA_4, BRA_5, BRA_6,
-        -- TODO
+        BMI_4, BMI_5, BMI_6, BMI_7,
+        BPL_4, BPL_5, BPL_6, BPL_7,
+        BEQ_4, BEQ_5, BEQ_6, BEQ_7,
+        BNE_4, BNE_5, BNE_6, BNE_7,
+        BVS_4, BVS_5, BVS_6, BVS_7,
+        BVC_4, BVC_5, BVC_6, BVC_7,
+        BCS_4, BCS_5, BCS_6, BCS_7,
+        BCC_4, BCC_5, BCC_6, BCC_7,
         HALT_99
     );
     signal CurrentState, NextState : State_Type;
@@ -74,7 +81,14 @@ begin
         constant DECA    : std_logic_vector := x"48";
         constant DECB    : std_logic_vector := x"49";
         constant BRA     : std_logic_vector := x"20";
-        -- TODO: Add opcode values above this line
+        constant BMI     : std_logic_vector := x"21";
+        constant BPL     : std_logic_vector := x"22";
+        constant BEQ     : std_logic_vector := x"23";
+        constant BNE     : std_logic_vector := x"24";
+        constant BVS     : std_logic_vector := x"25";
+        constant BVC     : std_logic_vector := x"26";
+        constant BCS     : std_logic_vector := x"27";
+        constant BCC     : std_logic_vector := x"28";
         constant NOP     : std_logic_vector := x"00";
         constant HALT    : std_logic_vector := x"FF";
     begin
@@ -85,12 +99,14 @@ begin
             when FETCH_2 => NextState <= DECODE_3;
             when DECODE_3 =>
                 case IR is
+                    -- Loads and stores
                     when LDA_IMM => NextState <= LDA_IMM_4;
                     when LDA_DIR => NextState <= LDA_DIR_4;
                     when LDB_IMM => NextState <= LDB_IMM_4;
                     when LDB_DIR => NextState <= LDB_DIR_4;
                     when STA_DIR => NextState <= STA_DIR_4;
                     when STB_DIR => NextState <= STB_DIR_4;
+                    -- Arithmetic
                     when ADD_AB  => NextState <= ADD_AB_4;
                     when SUB_AB  => NextState <= SUB_AB_4;
                     when AND_AB  => NextState <= AND_AB_4;
@@ -99,8 +115,24 @@ begin
                     when INCB    => NextState <= INCB_4;
                     when DECA    => NextState <= DECA_4;
                     when DECB    => NextState <= DECB_4;
+                    -- Branching
                     when BRA     => NextState <= BRA_4;
-                    -- TODO: Further instruction branching goes here
+                    when BMI     => NextState <= BMI_4 when CCR(0) = '1' else
+                                                 BMI_7;
+                    when BPL     => NextState <= BPL_4 when CCR(0) = '0' else
+                                                 BPL_7;
+                    when BEQ     => NextState <= BEQ_4 when CCR(1) = '1' else
+                                                 BMI_7;
+                    when BNE     => NextState <= BNE_4 when CCR(1) = '0' else
+                                                 BMI_7;
+                    when BVS     => NextState <= BVS_4 when CCR(2) = '1' else
+                                                 BMI_7;
+                    when BVC     => NextState <= BVC_4 when CCR(2) = '0' else
+                                                 BMI_7;
+                    when BCS     => NextState <= BCS_4 when CCR(3) = '1' else
+                                                 BMI_7;
+                    when BCC     => NextState <= BCC_4 when CCR(3) = '0' else
+                                                 BMI_7;
                     -- A no-op restarts the fetch cycle
                     when NOP    => NextState <= FETCH_0;
                     -- Handle HALT and invalid opcodes by halting
@@ -138,12 +170,36 @@ begin
             -- Branch Always
             when BRA_4 => NextState <= BRA_5;
             when BRA_5 => NextState <= BRA_6;
-            -- TODO: Further FSM flow control goes here
+            -- Branch Minus
+            when BMI_4 => NextState <= BMI_5;
+            when BMI_5 => NextState <= BMI_6;
+            -- Branch Positive
+            when BPL_4 => NextState <= BPL_5;
+            when BPL_5 => NextState <= BPL_6;
+            -- Branch Equal
+            when BEQ_4 => NextState <= BEQ_5;
+            when BEQ_5 => NextState <= BEQ_6;
+            -- Branch Not Equal
+            when BNE_4 => NextState <= BNE_5;
+            when BNE_5 => NextState <= BNE_6;
+            -- Branch V Set
+            when BVS_4 => NextState <= BVS_5;
+            when BVS_5 => NextState <= BVS_6;
+            -- Branch V Clear
+            when BVC_4 => NextState <= BVC_5;
+            when BVC_5 => NextState <= BVC_6;
+            -- Branch C Set
+            when BCS_4 => NextState <= BCS_5;
+            when BCS_5 => NextState <= BCS_6;
+            -- Branch C Clear
+            when BCC_4 => NextState <= BCC_5;
+            when BCC_5 => NextState <= BCC_6;
 
             -- HALT state remains in HALT until a reset
             when HALT_99 => NextState <= HALT_99;
-            -- Assume other states are at the end of their respective branches,
-            -- and restart the fetch cycle
+
+            -- Other states are at the end of their respective branches, and
+            -- restart the fetch cycle
             when others => NextState <= FETCH_0;
         end case;
     end process;
@@ -607,6 +663,36 @@ begin
                 write    <= '0';
             --   BRA_5 -> others  Wait for memory
             when BRA_6 =>
+            -- Load PC from memory
+                PC_Load  <= '1';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '0';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "11";
+                Bus2_Sel <= "10";
+                write    <= '0';
+
+            -- Branching instructions all have the same outputs; flow is
+            -- controlled by next-state logic
+            when BMI_4 | BPL_4 | BEQ_4 | BNE_4 | BVS_4 | BVC_4 | BCS_4 | BCC_4 =>
+            -- Store PC to MAR
+                PC_Load  <= '0';
+                PC_Inc   <= '0';
+                IR_Load  <= '0';
+                MAR_Load <= '1';
+                A_Load   <= '0';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "00";
+                Bus2_Sel <= "01";
+                write    <= '0';
+            --   BMI_5 | BPL_5 | BEQ_5 | BNE_5 | BVS_5 | BVC_5 | BCS_5 | BCC_5 -> others  Wait for memory
+            when BMI_6 | BPL_6 | BEQ_6 | BNE_6 | BVS_6 | BVC_6 | BCS_6 | BCC_6 =>
             -- Load PC from memory
                 PC_Load  <= '1';
                 PC_Inc   <= '0';

@@ -29,7 +29,14 @@ architecture rom_128x8_sync_arch of rom_128x8_sync is
     constant DECA    : std_logic_vector := x"48";
     constant DECB    : std_logic_vector := x"49";
     constant BRA     : std_logic_vector := x"20";
-    -- TODO: Add opcode values above this line
+    constant BMI     : std_logic_vector := x"21";
+    constant BPL     : std_logic_vector := x"22";
+    constant BEQ     : std_logic_vector := x"23";
+    constant BNE     : std_logic_vector := x"24";
+    constant BVS     : std_logic_vector := x"25";
+    constant BVC     : std_logic_vector := x"26";
+    constant BCS     : std_logic_vector := x"27";
+    constant BCC     : std_logic_vector := x"28";
     constant NOP     : std_logic_vector := x"00";
     constant HALT    : std_logic_vector := x"FF";
 
@@ -44,17 +51,20 @@ architecture rom_128x8_sync_arch of rom_128x8_sync is
         16#03# => x"F0",
         16#04# => ADD_AB,
 
-        16#05# => STA_DIR,
-        16#06# => x"E0",
-        16#07# => STA_DIR,
-        16#08# => x"E1",
-        16#09# => STA_DIR,
-        16#0A# => x"E2",
-        16#0B# => STA_DIR,
-        16#0C# => x"E3",
+        16#05# => BEQ,
+        16#06# => x"02",
 
-        16#0D# => BRA,
-        16#0E# => x"02",
+        16#07# => STA_DIR,
+        16#08# => x"E0",
+        16#09# => STA_DIR,
+        16#0A# => x"E1",
+        16#0B# => STA_DIR,
+        16#0C# => x"E2",
+        16#0D# => STA_DIR,
+        16#0E# => x"E3",
+
+        16#0F# => BRA,
+        16#10# => x"02",
         others => HALT
     );
 
