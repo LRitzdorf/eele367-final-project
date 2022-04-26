@@ -92,28 +92,28 @@ begin
                     when DECB    => NextState <= DECB_4;
                     -- Branching
                     when BRA     => NextState <= BRA_4;
-                    when BMI     => if CCR(0) = '1' then NextState <= BMI_4;
+                    when BMI     => if CCR(3) = '1' then NextState <= BMI_4;
                                                     else NextState <= BMI_7;
                                     end if;
-                    when BPL     => if CCR(0) = '0' then NextState <= BPL_4;
+                    when BPL     => if CCR(3) = '0' then NextState <= BPL_4;
                                                     else NextState <= BPL_7;
                                     end if;
-                    when BEQ     => if CCR(1) = '1' then NextState <= BEQ_4;
+                    when BEQ     => if CCR(2) = '1' then NextState <= BEQ_4;
                                                     else NextState <= BEQ_7;
                                     end if;
-                    when BNE     => if CCR(1) = '0' then NextState <= BNE_4;
+                    when BNE     => if CCR(2) = '0' then NextState <= BNE_4;
                                                     else NextState <= BNE_7;
                                     end if;
-                    when BVS     => if CCR(2) = '1' then NextState <= BVS_4;
+                    when BVS     => if CCR(1) = '1' then NextState <= BVS_4;
                                                     else NextState <= BVS_7;
                                     end if;
-                    when BVC     => if CCR(2) = '0' then NextState <= BVC_4;
+                    when BVC     => if CCR(1) = '0' then NextState <= BVC_4;
                                                     else NextState <= BVC_7;
                                     end if;
-                    when BCS     => if CCR(3) = '1' then NextState <= BCS_4;
+                    when BCS     => if CCR(0) = '1' then NextState <= BCS_4;
                                                     else NextState <= BCS_7;
                                     end if;
-                    when BCC     => if CCR(3) = '0' then NextState <= BCC_4;
+                    when BCC     => if CCR(0) = '0' then NextState <= BCC_4;
                                                     else NextState <= BCC_7;
                                     end if;
                     -- A no-op restarts the fetch cycle
