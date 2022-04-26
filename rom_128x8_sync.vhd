@@ -1,6 +1,8 @@
 library ieee;
     use ieee.std_logic_1164.all;
     use ieee.numeric_std.all;
+library work;
+    use work.opcodes.all;
 
 entity rom_128x8_sync is
     port (
@@ -12,37 +14,10 @@ end entity;
 
 architecture rom_128x8_sync_arch of rom_128x8_sync is
 
-    -- Opcode values
-    -- TODO: Use a package for this?
-    constant LDA_IMM : std_logic_vector := x"86";
-    constant LDA_DIR : std_logic_vector := x"87";
-    constant LDB_IMM : std_logic_vector := x"88";
-    constant LDB_DIR : std_logic_vector := x"89";
-    constant STA_DIR : std_logic_vector := x"96";
-    constant STB_DIR : std_logic_vector := x"97";
-    constant ADD_AB  : std_logic_vector := x"42";
-    constant SUB_AB  : std_logic_vector := x"43";
-    constant AND_AB  : std_logic_vector := x"44";
-    constant OR_AB   : std_logic_vector := x"45";
-    constant INCA    : std_logic_vector := x"46";
-    constant INCB    : std_logic_vector := x"47";
-    constant DECA    : std_logic_vector := x"48";
-    constant DECB    : std_logic_vector := x"49";
-    constant BRA     : std_logic_vector := x"20";
-    constant BMI     : std_logic_vector := x"21";
-    constant BPL     : std_logic_vector := x"22";
-    constant BEQ     : std_logic_vector := x"23";
-    constant BNE     : std_logic_vector := x"24";
-    constant BVS     : std_logic_vector := x"25";
-    constant BVC     : std_logic_vector := x"26";
-    constant BCS     : std_logic_vector := x"27";
-    constant BCC     : std_logic_vector := x"28";
-    constant NOP     : std_logic_vector := x"00";
-    constant HALT    : std_logic_vector := x"FF";
-
     type ROM_Type is array (0 to 127) of std_logic_vector(data_out'left downto 0);
 
     -- NOTE: Program goes in here!
+    --       Opcode constants are loaded from the "work.opcodes" package.
     constant ROM : ROM_Type := (
         16#00# => LDB_IMM,
         16#01# => x"03",
