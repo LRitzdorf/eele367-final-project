@@ -688,6 +688,19 @@ begin
                 Bus1_Sel <= "11";
                 Bus2_Sel <= "10";
                 write    <= '0';
+            when BMI_7 | BPL_7 | BEQ_7 | BNE_7 | BVS_7 | BVC_7 | BCS_7 | BCC_7 =>
+            -- Increment PC
+                PC_Load  <= '0';
+                PC_Inc   <= '1';
+                IR_Load  <= '0';
+                MAR_Load <= '0';
+                A_Load   <= '0';
+                B_Load   <= '0';
+                ALU_Sel  <= "000";
+                CCR_Load <= '0';
+                Bus1_Sel <= "11";
+                Bus2_Sel <= "11";
+                write    <= '0';
 
             when others =>
             -- Do nothing (set all signals to defaults)
