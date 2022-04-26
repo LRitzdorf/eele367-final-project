@@ -11,10 +11,10 @@ VHDL*.
 This project consists of several stages, culminating in an FPGA implementation
 of a rudimentary RISC computer system:
 
-1. VHDL skeleton
-2. Simulation of four basic instructions
-3. FPGA implementation of basic instructions
-4. Implementing additional instructions
+1. [VHDL skeleton](https://github.com/LRitzdorf/eele367-final-project/tree/stage-1)
+2. [Simulation of four basic instructions](https://github.com/LRitzdorf/eele367-final-project/tree/stage-2)
+3. [FPGA implementation of basic instructions](https://github.com/LRitzdorf/eele367-final-project/tree/stage-3)
+4. [Implementing additional instructions](https://github.com/LRitzdorf/eele367-final-project/tree/stage-4)
 
 ## System Architecture
 
