@@ -1,7 +1,10 @@
 # EELE 367 Final Project
 
-The final project for EELE 367, Logic Design (a course covering logic circuit
-design with VHDL, as well as implementation on an FPGA).
+This is the final project for EELE 367, Logic Design (a course covering logic
+circuit design with VHDL, as well as implementation on an FPGA). This assignment
+was created by Professor Brock LaMeres. Relevant course material is available in
+Professor LaMeres' textbook, *Introduction to Logic Circuits & Logic Design with
+VHDL*.
 
 ## Project Phases
 
