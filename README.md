@@ -47,6 +47,8 @@ The core `computer` entity is composed of:
 
   - `computer`: the "real" computer entity; instantiates and connects the CPU
     and memory components
+    - `opcodes`: VHDL package; declares constant opcode values for the control
+      unit and ROM (program memory)
     - `cpu`: instantiates and connects the processor control unit and the data
       path
       - `control_unit`: finite state machine; implements the CPU's
@@ -65,7 +67,7 @@ The core `computer` entity is composed of:
 
 ## Opcodes/Mnemonics
 
-At present, the computer system implements the following mnemonics:
+The computer system implements the following mnemonics:
 
 Mnemonic  | Opcode | Operand(s)      | Function
 ----------|--------|-----------------|---------
@@ -84,6 +86,14 @@ Mnemonic  | Opcode | Operand(s)      | Function
 `DECA`    | `0x48` |                 | Decrement the value in register A by one
 `DECB`    | `0x49` |                 | Decrement the value in register B by one
 `BRA`     | `0x20` | Program address | Branch always
+`BMI`     | `0x21` | Program address | Branch when ALU negative flag is set
+`BPL`     | `0x22` | Program address | Branch when ALU negative flag is clear
+`BEQ`     | `0x23` | Program address | Branch when ALU zero flag is set
+`BNE`     | `0x24` | Program address | Branch when ALU zero flag is clear
+`BVS`     | `0x25` | Program address | Branch when ALU overflow flag is set
+`BVC`     | `0x26` | Program address | Branch when ALU overflow flag is clear
+`BCS`     | `0x27` | Program address | Branch when ALU carry flag is set
+`BCC`     | `0x28` | Program address | Branch when ALU carry flag is clear
 `NOP`     | `0x00` |                 | No-op (do nothing and continue executing)
 `HALT`    | `0xFF` |                 | End program execution
 
