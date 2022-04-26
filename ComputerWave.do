@@ -38,7 +38,8 @@ add wave -noupdate /computer_tb/DUT1/uCPU/uDataPath/uALU/In1
 add wave -noupdate /computer_tb/DUT1/uCPU/uDataPath/uALU/In2
 add wave -noupdate -radix binary /computer_tb/DUT1/uCPU/ALU_Sel
 add wave -noupdate /computer_tb/DUT1/uCPU/uDataPath/ALU_Result
-add wave -noupdate -radix binary /computer_tb/DUT1/uCPU/uDataPath/ALU_NZVC
+add wave -noupdate /computer_tb/DUT1/uCPU/CCR_Load
+add wave -noupdate -radix binary /computer_tb/DUT1/uCPU/CCR
 add wave -noupdate -divider Ports
 add wave -noupdate -group {Input Ports} /computer_tb/port_in_00_TB
 add wave -noupdate -group {Input Ports} /computer_tb/port_in_01_TB
@@ -89,3 +90,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
+WaveRestoreZoom {50 ns} {1050 ns}
