@@ -26,7 +26,8 @@ when debugging systems such as this.
 
 ### Simulation
 
-When run as a simulation, the computer system is comprised of the following entities:
+When run as a simulation, the computer system is comprised of the following
+entities:
 
 - `computer_TB`: VHDL test bench to verify system functionality; provides basic
   control signals and I/O connections, but is not synthesizable
@@ -34,7 +35,8 @@ When run as a simulation, the computer system is comprised of the following enti
 
 ### FPGA Implementation
 
-When synthesized and implemented on an FPGA, the computer system is comprised of the following entities:
+When synthesized and implemented on an FPGA, the computer system is comprised of
+the following entities:
 
 - `top`: top-level entity; forms the basis for synthesis and flashing to an FPGA
   - `computer` core entity (see below)
@@ -46,27 +48,26 @@ When synthesized and implemented on an FPGA, the computer system is comprised of
 
 ### Computer Core
 
-The core `computer` entity is composed of:
+The core `computer` entity is the top level of the "real" computer unit. It is
+composed of the following:
 
-  - `computer`: the "real" computer entity; instantiates and connects the CPU
-    and memory components
-    - `opcodes`: VHDL package; declares constant opcode values for the control
-      unit and ROM (program memory)
-    - `cpu`: instantiates and connects the processor control unit and the data
-      path
-      - `control_unit`: finite state machine; implements the CPU's
-        fetch-decode-execute cycle to control operations in the data path
-      - `data_path`: contains registers, buses, and general data wiring;
-        performs data manipulation as directed by the control unit
-        - `alu`: arithmetic/logical unit; performs more complex data
-          manipulation (arithmetic and logical operations) as necessary
-    - `memory`: directly implements I/O ports and instantiates ROM and RW memory
-      modules; controls memory mapping so that subcomponents do not need to be
-      aware of their positions in the mapped system
-      - `rom_128x8_sync`: synchronous ROM (program) memory, containing 128 8-bit
-        addresses (1024 bits of total space)
-      - `rw_96x8_sync`: synchronous RW (data) memory, containing 96 8-bit
-        addresses (768 bits of total space)
+- `opcodes`: VHDL package; declares constant opcode values for the control
+  unit and ROM (program memory)
+- `cpu`: instantiates and connects the processor control unit and the data
+  path
+  - `control_unit`: finite state machine; implements the CPU's
+    fetch-decode-execute cycle to control operations in the data path
+  - `data_path`: contains registers, buses, and general data wiring;
+    performs data manipulation as directed by the control unit
+    - `alu`: arithmetic/logical unit; performs more complex data
+      manipulation (arithmetic and logical operations) as necessary
+- `memory`: directly implements I/O ports and instantiates ROM and RW memory
+  modules; controls memory mapping so that subcomponents do not need to be
+  aware of their positions in the mapped system
+  - `rom_128x8_sync`: synchronous ROM (program) memory, containing 128 8-bit
+    addresses (1024 bits of total space)
+  - `rw_96x8_sync`: synchronous RW (data) memory, containing 96 8-bit
+    addresses (768 bits of total space)
 
 ## Opcodes/Mnemonics
 
