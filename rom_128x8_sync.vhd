@@ -26,11 +26,12 @@ architecture rom_128x8_sync_arch of rom_128x8_sync is
         16#03# => x"F0",
         16#04# => ADD_AB,
 
-        16#05# => BEQ,
-        16#06# => x"02",
+        16#05# => STA_DIR,
+        16#06# => x"E0",
 
-        16#07# => STA_DIR,
-        16#08# => x"E0",
+        16#07# => BEQ,
+        16#08# => x"02",
+
         16#09# => STA_DIR,
         16#0A# => x"E1",
         16#0B# => STA_DIR,
